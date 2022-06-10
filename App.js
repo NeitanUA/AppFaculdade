@@ -1,23 +1,75 @@
+
+
+
+
+
+
 import React, { Component } from 'react';
-import { requireNativeComponent } from 'react-native';
 import{
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 }from 'react-native';
-import { TouchableOpacity } from 'react-native-web';
+
+
 
 type Props = {};
-  export default class app extends Component<Props> {
+  export default class App extends Component<Props> {
+
+    constructor(props){
+      super(props)
+      this.state = {altura:0, massa:0, resultado:0, resultadoText:""}
+      this.calcular = this.calcular.bind(this)
+    }
+
+      calcular(){
+
+        let imc = this.state.massa/ (this.state.altura * this.state.altura)
+
+        let s = this.state
+        s.resultado = imc
+        this.setState(s)
+
+        if(s.resultado <16){
+          s.resultadoText = "Magreza Grave"
+        
+        } else if(s.resultado <17){
+          s.resultadoText = "Magreza Moderada"
+
+        }else if(s.resultado <18.5){
+          s.resultadoText = "Magreza Leve"
+
+        }else if(s.resultado <25){
+          s.resultadoText = "Saudável"
+
+        }else if(s.resultado <30){
+          s.resultadoText = "Sobre Peso"
+
+        }else if(s.resultado <35){
+          s.resultadoText = "Obesidade Grau I"
+
+        }else if(s.resultado <40){
+          s.resultadoText = "Obesidade Grau II"
+
+        } else
+          s.resultadoText = "Obesidade Grau III"
+
+        this.setState(s)
+      }
+
+
     render() {
       return (
         <View style={styles.container}>
           <View style={styles.entradas}>
-            <TextInput placeholder="Massa" keyboardType='numeric' style={styles.input}/>
-            <TextInput placeholder="Altura" keyboardType='numeric' style={styles.input}/>
+            <TextInput placeholder="Massa" keyboardType='numeric' style={styles.input} onChangeText={(massa)=>{this.setState({massa})}}/>
+            <TextInput placeholder="Altura" keyboardType='numeric' style={styles.input} onChangeText={(altura)=>{this.setState({altura})}}/>
           </View>
-          <TouchableOpacity style={styles.Button} onPress={()=>{}}><Text style={styles.ButtonText}>Calcular</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.Button} onPress={this.calcular}><Text style={styles.ButtonText}>Calcular</Text></TouchableOpacity> 
+          <Text style={styles.resultado}>{this.state.resultado.toFixed(2)}</Text>
+          <Text style={[styles.resultado, {fontSize: 35 } ]}>{this.state.resultadoText}</Text>
         </View>
       );
     }
@@ -28,7 +80,7 @@ type Props = {};
       flex: 1,
       backgroundColor: '#f5fcff',
     },
-    endradas: {
+    entradas: {
       flexDirection: 'row',
     },
     input: {
@@ -36,7 +88,8 @@ type Props = {};
       textAlign: 'center',
       width: "50%",
       fontSize: 50,
-      marginTop: 24,    
+      marginTop: 24,
+      color: 'gray'
     },
     Button: {
       backgroundColor: "#89ffa5"
@@ -47,6 +100,13 @@ type Props = {};
       fontSize: 25,
       color: '#6dc4a4',
       fontWeight: 'bold',
+    },
+    resultado: {
+      alignSelf: 'center',
+      color: 'lightgray',
+      fontSize: 65,
+      padding:15
+
     }
 
   });
